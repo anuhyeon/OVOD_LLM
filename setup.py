@@ -20,7 +20,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'yoloworld_test_node = ovod_llm.yoloworld_test:main',
+            'detection_node = ovod_llm.detection_node:main',
+            'webcam_publisher = ovod_llm.camera_node:main',
+
         ],
     },
 )

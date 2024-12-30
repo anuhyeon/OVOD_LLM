@@ -14,12 +14,12 @@ class DetectionNode(Node):
         qos_profile = rclpy.qos.QoSProfile(depth=10)
         self.image_subscription = self.create_subscription(
             Image,   # from sensor_msgs.msg import Image 메세지 타입 지정
-            'camera/camera/color/image_raw',  # 퍼블리싱 노드에서 발행하는 RGB 이미지 토픽
+            'webcam/image_raw',  # Joytron 웹캠에서 발행하는 이미지 토픽
             self.detect_callback,
             qos_profile
         )
         self.bridge = CvBridge()
-        self.get_logger().info("Detection Node started")
+        self.get_logger().info("yoloworld 노드 시작")
 
         ###======================= YOLOWorld 설정 부분 =======================
         # YOLOWorld 모델 로드
@@ -30,7 +30,7 @@ class DetectionNode(Node):
         self.model = YOLOWorld("yolov8s-world.pt")  # YOLOWorld 모델 가중치
         self.model.to(self.device)
         # YOLO 모델에 설정
-        self.model.set_classes(['water bottle'])
+        # self.model.set_classes(['water bottle'])
         self.get_logger().info("YOLOWorld model loaded successfully")
 
         ###=============================================================
@@ -46,9 +46,7 @@ class DetectionNode(Node):
         for result in results:
             for box in result.boxes:
                 x1, y1, x2, y2 = map(int, box.xyxy[0])  # 바운딩 박스 좌표
-                conf = box.conf[0]# 신뢰도
-                # if conf < 0.29:
-                    # continue 
+                conf = box.conf[0]  # 신뢰도
                 cls = box.cls[0]  # 클래스 ID
                 label = f"{self.model.names[int(cls)]} {conf:.2f}"  # 클래스 이름과 신뢰도
 
