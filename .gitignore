@@ -1,1 +1,3 @@
-/home/rcv/ros2_ws/src/ovod_llm/ovod_llm/__pycache__
+# *.pyc
+/home/rcv/ros2_ws/src/ovod_llm/ovod_llm/__pycache__/
+# __pycache__/
