@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'detection_node = ovod_llm.detection_node:main',
             'webcam_publisher = ovod_llm.camera_node:main',
+            'llm_node = ovod_llm.llm_node:main'
 
         ],
     },

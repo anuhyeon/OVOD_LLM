@@ -5,6 +5,7 @@ from cv_bridge import CvBridge
 import cv2
 import torch
 from ultralytics import YOLOWorld
+import os
 
 class DetectionNode(Node):
     def __init__(self):
@@ -18,6 +19,13 @@ class DetectionNode(Node):
             self.detect_callback,
             qos_profile
         )
+        
+        self.captured_image_publisher = self.create_publisher(
+            Image,  # 캡처된 프레임 퍼블리싱
+            'captured/image_raw',
+            qos_profile
+        )
+        
         self.bridge = CvBridge()
         self.get_logger().info("yoloworld 노드 시작")
 
@@ -34,6 +42,11 @@ class DetectionNode(Node):
         self.get_logger().info("YOLOWorld model loaded successfully")
 
         ###=============================================================
+
+        # 프레임 저장 디렉토리 설정
+        self.save_directory = "/home/rcv/ros2_ws/src/ovod_llm/ovod_llm/captured_frames"
+        os.makedirs(self.save_directory, exist_ok=True)
+        self.frame_count = 0
 
     def detect_callback(self, data):
         ###======================= 모델 추론 부분 =======================
@@ -56,7 +69,19 @@ class DetectionNode(Node):
 
         # Displaying the predictions
         cv2.imshow('YOLOWorld Object Detection', cv_image)
-        cv2.waitKey(1)
+
+        ###======================= 캡처 및 저장 및 퍼블리시 =======================
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('c'):
+            # self.frame_count += 1
+            file_path = os.path.join(self.save_directory, f"captured_frame.jpg")#f"frame_{self.frame_count:04d}.jpg")
+            cv2.imwrite(file_path, cv_image)
+            self.get_logger().info(f"-=-=-=-=-=-{file_path}여기에 저장됨-=-=-=-=-=-=")
+
+            # 캡처된 프레임을 퍼블리싱
+            captured_msg = self.bridge.cv2_to_imgmsg(cv_image, encoding='bgr8')
+            self.captured_image_publisher.publish(captured_msg)
+            self.get_logger().info("-=-=-=-=-=Published captured frame-=-=-=-=-=")
 
 def main(args=None):
     rclpy.init(args=args)

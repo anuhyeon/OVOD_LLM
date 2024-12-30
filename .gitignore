@@ -2,3 +2,7 @@
 # /home/rcv/ros2_ws/src/ovod_llm/ovod_llm/__pycache__/
 # __pycache__/
 ovod_llm/__pycache__/
+ovod_llm/captured_frames/*
+.env
+ovod_llm/server/gptapi.py
+ovod_llm/camera_test.py
