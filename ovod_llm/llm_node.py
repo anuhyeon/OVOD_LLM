@@ -8,9 +8,6 @@ import os
 from dotenv import load_dotenv
 import base64
 
-
-
-
 class LLMNode(Node):
     def __init__(self):
         super().__init__('llm_node')
@@ -28,7 +25,7 @@ class LLMNode(Node):
 
         # 환경 변수 로드
         
-        load_dotenv("/home/rcv/ros2_ws/src/ovod_llm/.env")
+        load_dotenv("/home/rcv/uhan_rox/src/OVOD_LLM/ovod_llm/.env")
         self.api_key = os.getenv("OPENAI_API_KEY")
 
         if not self.api_key:
@@ -38,7 +35,7 @@ class LLMNode(Node):
         # OpenAI 클라이언트 설정
         self.client = OpenAI(api_key=self.api_key)
         #-=-=-=-=-=-=-=-=-=-=-=-=-모호한 표현 + 프롬프팅-=-=-=-=-=-=-=-=-=-=-=-=-=-
-        self.prompt = "해당 사진에 대해서 간단하게 설명해줘"
+        self.prompt = "해당 사진에 대해서 자세하게 설명해줘"
     # 파일시스템 이미지 인코딩
     # def encode_image(image_path):
     #     with open(image_path, "rb") as image_file:
